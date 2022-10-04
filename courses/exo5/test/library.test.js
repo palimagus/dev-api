@@ -1,22 +1,39 @@
-const { getBooks } = require("../library");
+const { getBooks, getBookById, addBook, deleteBookById } = require("../library");
 
 describe("the getBooks function", () => {
-    it.todo("should return an array of objects");
+    it("should return an array of objects", () => {
+        expect(getBooks()).toBeInstanceOf(Array);
+    });
 })
 
 describe("the getgetBookById function", () => {
-    it.todo("should return a specified book by it's id");
-    it.todo("should return an empty object if book doesn't exist");
+    it("should return a specified book by it's id", () => {
+        expect(getBookById(0)).toBeUndefined();
+        expect(getBookById(1).id).toEqual(1);
+    });
 })
 
 describe("the addBook function", () => {
-    it.todo("should insert a new book in book list");
-    it.todo("should return true if insertion is successful");
-    it.todo("should throw a new error if a parameter is not set");
+    it("should insert a new book in book list", () => {
+        const books = getBooks();
+        expect(books.find(o => o.id === 4)).toBeUndefined();
+
+        expect(addBook(4, "La Guerre des Clans", 7)).toBeTruthy();
+        expect(getBookById(4).note).toEqual(7);
+    });
+    it("should throw a new error if a parameter is not set", () => {
+        expect(() => addBook()).toThrow('All parameters are required');
+        expect(() => addBook(8)).toThrow('All parameters are required');
+    });
 })
 
 describe("the deleteBookById function", () => {
-    it.todo("should remove a book from the book list");
-    it.todo("should return true if the book was correctly removed");
-    it.todo("should throw a new error if the specified book doesn't exist");
+    it("should remove a book from the book list", () => {
+        expect(getBooks()[0].id).toEqual(1);
+        expect(deleteBookById(1)).toBeTruthy();
+        expect(getBookById(1)).toBeUndefined();
+    });
+    it("should throw a new error if the specified book doesn't exist", () => {
+        expect(() => deleteBookById(0)).toThrow('Book not found');
+    });
 })
