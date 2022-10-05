@@ -1,0 +1,362 @@
+{
+	"info": {
+		"_postman_id": "3ee23239-4f97-447a-8d9a-7d5cac553c79",
+		"name": "Ynov Cours API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "API",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const jsonData = pm.response.json();\r",
+							"\r",
+							"pm.test(\"API status true\", function () {\r",
+							"    pm.expect(jsonData.success).to.be.true;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Player level at least 0\", function () {\r",
+							"    pm.expect(jsonData.currentLevel).to.gte(0);\r",
+							"\r",
+							"    pm.collectionVariables.set('level', jsonData.currentLevel);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{api}}",
+					"host": [
+						"{{api}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Me",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const jsonData = pm.response.json();\r",
+							"\r",
+							"pm.test(\"API status true\", function () {\r",
+							"    pm.expect(jsonData.success).to.be.true;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Player level at least 0\", function () {\r",
+							"    pm.expect(jsonData.data.level).to.gte(0);\r",
+							"\r",
+							"    pm.collectionVariables.set('level', jsonData.currentLevel);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Player lastname, firstname and mail keys exists\", function () {\r",
+							"    pm.expect(jsonData.data.firstname).not.to.be.undefined;\r",
+							"    pm.expect(jsonData.data.lastname).not.to.be.undefined;\r",
+							"    pm.expect(jsonData.data.mail).not.to.be.undefined;\r",
+							"\r",
+							"    pm.collectionVariables.set(\"mail\", jsonData.data.mail);\r",
+							"    pm.collectionVariables.set(\"level\", jsonData.data.level);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{api}}/me",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"me"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Me",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const jsonData = pm.response.json();\r",
+							"\r",
+							"pm.test(\"API status true\", function () {\r",
+							"    pm.expect(jsonData.success).to.be.true;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Successfully updated profile\", function () {\r",
+							"    const path = pm.collectionVariables.get(\"api\") + \"/me\";\r",
+							"    const savedMail = pm.collectionVariables.get(\"mail\");\r",
+							"\r",
+							"    pm.sendRequest(path, (err, res) => {\r",
+							"        const data = res.json().data;\r",
+							"\r",
+							"        pm.expect(err).to.be.null;\r",
+							"        pm.expect(data.mail).to.eql(savedMail);\r",
+							"    })\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"mail\": \"{{mail}}\",\r\n    \"firstname\": \"Maxime\",\r\n    \"lastname\": \"Bécu-Métailler\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api}}/me",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"me"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Me",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Delete is not authorized on this API\r",
+							"const jsonData = pm.response.json();\r",
+							"\r",
+							"pm.test(\"API status false\", function () {\r",
+							"    pm.expect(jsonData.success).to.be.false;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"My profile still exists\", function () {\r",
+							"    const path = pm.collectionVariables.get(\"api\") + \"/me\";\r",
+							"    const savedMail = pm.collectionVariables.get(\"mail\");\r",
+							"\r",
+							"    pm.sendRequest(path, (err, res) => {\r",
+							"        const data = res.json().data;\r",
+							"\r",
+							"        pm.expect(err).to.be.null;\r",
+							"        pm.expect(data.mail).to.eql(savedMail);\r",
+							"    })\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{api}}/me",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"me"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Levels",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const jsonData = pm.response.json();\r",
+							"\r",
+							"pm.test(\"API status true\", function () {\r",
+							"    pm.expect(jsonData.success).to.be.true;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Levels array contains at least one level over currentLevel\", function () {\r",
+							"    const savedLevel = pm.collectionVariables.get(\"level\");\r",
+							"    \r",
+							"    pm.expect(jsonData.levels).not.to.be.undefined;\r",
+							"    pm.expect(jsonData.levels.length).to.be.greaterThan(savedLevel + 1);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{api}}/levels",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"levels"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Profiles",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const jsonData = pm.response.json();\r",
+							"\r",
+							"pm.test(\"API status true\", function () {\r",
+							"    pm.expect(jsonData.success).to.be.true;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Should find actual user in profiles list\", function() {\r",
+							"    const savedLevel = pm.collectionVariables.get(\"level\");\r",
+							"    const savedMail = pm.collectionVariables.get(\"mail\");\r",
+							"\r",
+							"    const me = jsonData.data.find(o => o.mail == savedMail);\r",
+							"    pm.expect(me).not.to.be.undefined;\r",
+							"    pm.expect(me.level).to.eql(savedLevel);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{api}}/profiles",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"profiles"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Games",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const jsonData = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Get best noted game\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    var games = jsonData.games.sort((a, b) => b.note - a.note);\r",
+							"    var bestGame = games[0];\r",
+							"\r",
+							"    console.log(\"Worst game: \", games[games.length-1]);\r",
+							"\r",
+							"    pm.expect(bestGame.id).to.eql(5);\r",
+							"    pm.sendRequest(`https://quentin-desbin.fr/api/games/${bestGame.id}`, function (err, response) {\r",
+							"        var jsonData = response.json();\r",
+							"        console.log(jsonData.game);\r",
+							"    });\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"mail\": \"mbecumetailler@gmail.com\",\r\n    \"firstname\": \"Maxime\",\r\n    \"lastname\": \"Bécu-Métailler\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api}}/games",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"games"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "api",
+			"value": "https://quentin-desbin.fr/api",
+			"type": "default"
+		},
+		{
+			"key": "level",
+			"value": "0",
+			"type": "default"
+		},
+		{
+			"key": "mail",
+			"value": "",
+			"type": "default"
+		}
+	]
+}
